@@ -22,18 +22,26 @@ class MainController: UIViewController {
         NotificationCenter.default.addObserver(
             self, selector: #selector(onChangeLang), name: .L10nLanguageChanged, object: nil
         )
-        
     }
     
-    @objc func onChangeLang(){
+    @objc func onChangeLang() {
         print("Lang changed to : \(L10n.shared.language)")
+        
         var semantic: UISemanticContentAttribute = .forceLeftToRight
-        if(L10n.shared.language == "ar"){
+        
+        if isArabic() {
             semantic = .forceRightToLeft
         }
         
         UIView.appearance().semanticContentAttribute = semantic
         
+        // Update Tab Bar Item Titles
+        if let customTabBarController = self.tabBarController as? CustomTabBar {
+            customTabBarController.setText()
+            customTabBarController.setRTL(isArabic())
+        }
+        
+        // Update the view hierarchy to reflect the changes
         let window = self.view.superview
         self.view.removeFromSuperview()
         window?.addSubview(self.view)
@@ -77,5 +85,14 @@ class MainController: UIViewController {
     
     func changeStatusToBlack() {
         UIApplication.shared.statusBarStyle = .darkContent
+    }
+    
+    func setViewsWithSelectors(_ views:[ViewsWithSelectors]) {
+        for v in views {
+            let singleTap = UITapGestureRecognizer(target: self, action: v.action)
+            
+            v.view.isUserInteractionEnabled = true
+            v.view.addGestureRecognizer(singleTap)
+        }
     }
 }

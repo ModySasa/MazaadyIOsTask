@@ -26,7 +26,13 @@ class UserViewController: MainController, UserViewProtocol , UISearchBarDelegate
         super.viewDidLoad()
         setupTableView()
         setupPresenter()
+        changeLang(isArabic() ? .ar : .en)
         presenter.loadInitialData()
+        setViewsWithSelectors(
+            .init(arrayLiteral:
+                    .init(langStack, #selector(showLangSheet))
+            )
+        )
     }
 
     private func setupTableView() {
@@ -97,12 +103,47 @@ class UserViewController: MainController, UserViewProtocol , UISearchBarDelegate
         // TODO: show error alert
     }
     
+    //MARK: CHANGE LANG
+    
     func changeLang(_ lang: Lang) {
         if(L10n.shared.language != lang.rawValue) {
             L10n.shared.language = lang.rawValue
         }
+        
         langLabel.text = isArabic() ? "العربيه" : "English"
+        langLabel.font = UIFont(name: "Nunito-Regular", size: 12)
+        langLabel.textColor = UIColor(named: "gray4")
+        
+        presenter.loadInitialData()
     }
+    
+    @objc
+    func showLangSheet() {
+        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let arabicAction = UIAlertAction(title: "العربية", style: .default) { _ in
+            self.changeLang(.ar)
+        }
+        
+        let englishAction = UIAlertAction(title: "English", style: .default) { _ in
+            self.changeLang(.en)
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+
+        alertController.addAction(arabicAction)
+        alertController.addAction(englishAction)
+        alertController.addAction(cancelAction)
+
+        if let popoverController = alertController.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+
+        present(alertController, animated: true)
+    }
+    
 }
 
 enum Lang : String {

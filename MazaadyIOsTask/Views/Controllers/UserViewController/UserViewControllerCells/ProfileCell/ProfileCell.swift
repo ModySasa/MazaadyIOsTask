@@ -9,7 +9,6 @@ import UIKit
 
 class ProfileCell: UITableViewCell {
     
-    
     @IBOutlet weak var userImage: UIImageView!
     @IBOutlet weak var userName: UILabel!
     @IBOutlet weak var userEmail: UILabel!
@@ -23,6 +22,9 @@ class ProfileCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+    }
+    
+    func configure(with profile: UserProfile) {
         followingLabel.text = strings(key: .following)
         followingLabel.font = UIFont(name: "Nunito-Regular", size: 12)
         followingLabel.textColor = UIColor(named: "purple")
@@ -30,9 +32,7 @@ class ProfileCell: UITableViewCell {
         followersLabel.text = strings(key: .followers)
         followersLabel.font = UIFont(name: "Nunito-Regular", size: 12)
         followersLabel.textColor = UIColor(named: "purple")
-    }
-    
-    func configure(with profile: UserProfile) {
+        
         userName.text = profile.name
         userName.font = UIFont(name: "Nunito-Bold", size: 18)
         userName.textColor = UIColor(named: "text_black")

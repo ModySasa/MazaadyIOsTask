@@ -23,6 +23,20 @@ class CustomTabBar : UITabBarController, UITabBarControllerDelegate {
         self.selectedIndex = itemIndex
     }
     
+    func setRTL(_ isArabic : Bool = false){
+        var semantic: UISemanticContentAttribute = .forceLeftToRight
+        
+        if isArabic {
+            semantic = .forceRightToLeft
+        }
+        
+        UIView.appearance().semanticContentAttribute = semantic
+        
+        let window = self.view.superview
+        self.view.removeFromSuperview()
+        window?.addSubview(self.view)
+    }
+    
  
     @objc func setText() {
           
