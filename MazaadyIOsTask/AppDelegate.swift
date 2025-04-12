@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreData
+import MSConnectionLib
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,6 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        let baseURL = "https://stagingapi.mazaady.com"
+        URLPrefHelper.shared.setUrls(mainUrl: baseURL, testUrl: baseURL)
         return true
     }
 

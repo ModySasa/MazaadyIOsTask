@@ -1,0 +1,54 @@
+{
+    "non":"",
+    "following":"Following",
+    "followers":"Followers",
+    
+    "pageTitle" : {
+        "":"",
+        "non":"",
+        
+    },
+
+    "emptyState" : {
+        "non":"",
+    },
+
+    "toast" : {
+        "non":"",
+        
+    },
+
+    "errorMessage" : {
+        "non":"",
+        
+    },
+
+    "button" : {
+        "non":"",
+        
+    },
+
+    "navBar" : {
+        "non":"",
+        
+        "home":"home",
+        "search":"search",
+        "cart":"cart",
+        "user":"user",
+    },
+
+    "days": {
+        "Sunday" : "Sunday",
+        "Monday" : "Monday",
+        "Tuesday" : "Tuesday",
+        "Wednesday" : "Wednesday",
+        "Thursday" : "Thursday",
+        "Friday" : "Friday",
+        "Saturday" : "Saturday"
+    },
+    
+    "time": {
+        "am":"AM",
+        "pm":"PM"
+    },
+}

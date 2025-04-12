@@ -1,0 +1,55 @@
+{
+    "non":"",
+    "following":"متابعة",
+    "followers":"متابعون",
+    
+    "pageTitle" : {
+        "":"",
+        "non":"",
+        
+    },
+
+    "emptyState" : {
+        "non":"",
+    },
+
+    "toast" : {
+        "non":"",
+        
+    },
+
+    "errorMessage" : {
+        "non":"",
+        
+    },
+
+    "button" : {
+        "non":"",
+        
+    },
+
+    "navBar" : {
+        "non":"",
+        
+        "home":"الرئيسية",
+        "search":"البحث",
+        "cart":"السلة",
+        "user":"المستخدم",
+        
+    },
+
+    "days": {
+        "Sunday" : "الأحد",
+        "Monday" : "الإثنين",
+        "Tuesday" : "الثلاثاء",
+        "Wednesday" : "الأربعاء",
+        "Thursday" : "الخميس",
+        "Friday" : "الجمعة",
+        "Saturday" : "السبت"
+    },
+
+    "time": {
+        "am":"ص",
+        "pm":"م"
+    }
+}

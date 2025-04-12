@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		112B334B2DA9C3AC00412A89 /* MSConnectionLib in Frameworks */ = {isa = PBXBuildFile; productRef = 112B334A2DA9C3AC00412A89 /* MSConnectionLib */; };
+		112B335B2DA9C86900412A89 /* L10n-swift in Frameworks */ = {isa = PBXBuildFile; productRef = 112B335A2DA9C86900412A89 /* L10n-swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		112B332C2DA9C04900412A89 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,6 +70,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				112B334B2DA9C3AC00412A89 /* MSConnectionLib in Frameworks */,
+				112B335B2DA9C86900412A89 /* L10n-swift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +132,8 @@
 			);
 			name = MazaadyIOsTask;
 			packageProductDependencies = (
+				112B334A2DA9C3AC00412A89 /* MSConnectionLib */,
+				112B335A2DA9C86900412A89 /* L10n-swift */,
 			);
 			productName = MazaadyIOsTask;
 			productReference = 112B33122DA9C04700412A89 /* MazaadyIOsTask.app */;
@@ -205,9 +214,14 @@
 			knownRegions = (
 				en,
 				Base,
+				ar,
 			);
 			mainGroup = 112B33092DA9C04700412A89;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				112B33492DA9C3AC00412A89 /* XCRemoteSwiftPackageReference "MSConnectionLib" */,
+				112B33592DA9C86900412A89 /* XCRemoteSwiftPackageReference "L10n-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 112B33132DA9C04700412A89 /* Products */;
 			projectDirPath = "";
@@ -571,6 +585,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		112B33492DA9C3AC00412A89 /* XCRemoteSwiftPackageReference "MSConnectionLib" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ModySasa/MSConnectionLib";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		112B33592DA9C86900412A89 /* XCRemoteSwiftPackageReference "L10n-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Decybel07/L10n-swift.git";
+			requirement = {
+				kind = exactVersion;
+				version = 5.10.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		112B334A2DA9C3AC00412A89 /* MSConnectionLib */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 112B33492DA9C3AC00412A89 /* XCRemoteSwiftPackageReference "MSConnectionLib" */;
+			productName = MSConnectionLib;
+		};
+		112B335A2DA9C86900412A89 /* L10n-swift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 112B33592DA9C86900412A89 /* XCRemoteSwiftPackageReference "L10n-swift" */;
+			productName = "L10n-swift";
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 112B330A2DA9C04700412A89 /* Project object */;
 }
