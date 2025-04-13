@@ -16,7 +16,6 @@ class AdsItemCell: UICollectionViewCell {
     }
     
     func configure(with adv: Advertisement) {
-        print("Ads image url: \(adv.image ?? "")")
         if let url = URL(string: adv.image ?? "") {
             downloadImage(url) { img in
                 self.advImage.image = img

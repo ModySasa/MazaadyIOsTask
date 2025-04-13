@@ -42,6 +42,7 @@ class UserViewController: MainController, UserViewProtocol , UISearchBarDelegate
         tableView.register(UINib(nibName: "ProductsCell", bundle: nil), forCellReuseIdentifier: "ProductsCell")
         tableView.register(UINib(nibName: "ProfileCell", bundle: nil), forCellReuseIdentifier: "ProfileCell")
         tableView.register(UINib(nibName: "AdsCell", bundle: nil), forCellReuseIdentifier: "AdsCell")
+        tableView.register(UINib(nibName: "TagsCell", bundle: nil), forCellReuseIdentifier: "TagsCell")
         
     }
     
@@ -74,32 +75,23 @@ class UserViewController: MainController, UserViewProtocol , UISearchBarDelegate
     
     // MARK: - UserViewProtocol Methods
     func showUserProfile(_ profile: UserProfile) {
-        print("User: \(profile.name ?? "")")
         self.userProfile = profile
         tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
-//        tableView.reloadData()
     }
 
     func showProducts(_ products: [Product]) {
-        print("Loaded \(products.count) products")
-        print("FILTERED \(filteredProducts.count) filteredProducts")
         self.products = products
         self.filteredProducts = products
-//        tableView.reloadData()
         tableView.reloadSections(IndexSet(integer: 2), with: .automatic)
     }
 
     func showAds(_ ads: [Advertisement]) {
-        print("Loaded \(ads.count) ads")
         self.ads = ads
-//        tableView.reloadData()
         tableView.reloadSections(IndexSet(integer: 3), with: .automatic)
     }
 
     func showTags(_ tags: [Tag]) {
-        print("Loaded \(tags.count) tags")
         self.tags = tags
-//        tableView.reloadData()
         tableView.reloadSections(IndexSet(integer: 4), with: .automatic)
     }
 
@@ -147,16 +139,45 @@ extension UserViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 5 // Profile, Search, Products, Ads, Tags
     }
-
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0: return userProfile == nil ? 0 : 1
         case 1: return 1 // Search
-        case 2: return 1 // Products cell
-        case 3: return 1
-        case 4: return tags.count
+        case 2: return filteredProducts.count > 0 ? 1 : 0
+        case 3: return ads.count > 0 ? 1 : 0
+        case 4: return tags.count > 0 ? 1 : 0
         default: return 0
         }
+    }
+    
+    func calculateHeight(for tags: [Tag], width: CGFloat) -> CGFloat {
+        let spacing: CGFloat = 8
+        let sectionInsets: CGFloat = 16  // Assuming 8 leading + 8 trailing
+
+        var totalHeight: CGFloat = 0
+        var currentRowWidth: CGFloat = 0
+        var maxHeightInRow: CGFloat = 0
+
+        for tag in tags {
+            let text = tag.name ?? ""
+            let size = text.size(with: UIFont(name: "Nunito-Bold", size: 12)!)
+            let itemWidth = size.width + 46
+            let itemHeight = size.height + 8
+
+            if currentRowWidth + itemWidth + spacing > width - sectionInsets {
+                // Move to next row
+                totalHeight += maxHeightInRow + spacing
+                currentRowWidth = 0
+                maxHeightInRow = 0
+            }
+
+            currentRowWidth += itemWidth + spacing
+            maxHeightInRow = max(maxHeightInRow, itemHeight)
+        }
+
+        totalHeight += maxHeightInRow // Add height of last row
+        return totalHeight + 32 // Add topTagsLabel + padding
     }
     
     func calculateProductsHeight() -> CGFloat {
@@ -191,7 +212,7 @@ extension UserViewController: UITableViewDataSource, UITableViewDelegate {
         } else if indexPath.section == 3 {
             return CGFloat(ads.count) * (150.0 + 16.0)
         } else {
-            return UITableView.automaticDimension
+            return calculateHeight(for: tags, width: tableView.frame.width) + 50
         }
     }
     
@@ -225,8 +246,8 @@ extension UserViewController: UITableViewDataSource, UITableViewDelegate {
             cell.configure(with: ads)
             return cell
         } else {
-            let cell = UITableViewCell()
-            cell.textLabel?.text = "Section \(indexPath.section) Row \(indexPath.row)"
+            let cell = tableView.dequeueReusableCell(withIdentifier: "TagsCell", for: indexPath) as! TagsCell
+            cell.configure(with: tags)
             return cell
         }
     }

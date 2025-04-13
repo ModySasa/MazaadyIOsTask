@@ -8,7 +8,7 @@
 import UIKit
 
 class LangChangeBottomSheet: MainController {
-
+    
     @IBOutlet weak var langLabel: UILabel!
     @IBOutlet weak var closeSheetImage: UIImageView!
     @IBOutlet weak var bottomSheet: UIView!
@@ -40,10 +40,10 @@ class LangChangeBottomSheet: MainController {
         setViewsWithSelectors(
             .init(arrayLiteral:
                     .init(arabicStack, #selector(selectArabic)),
-                    .init(englishStack, #selector(selectEnglish)),
-                    .init(closeSheetImage, #selector(cancel))
-                 )
-        
+                  .init(englishStack, #selector(selectEnglish)),
+                  .init(closeSheetImage, #selector(cancel))
+            )
+            
         )
         
         // Start sheet off-screen
@@ -94,5 +94,5 @@ class LangChangeBottomSheet: MainController {
             self.dismiss(animated: false)
         }
     }
-
+    
 }

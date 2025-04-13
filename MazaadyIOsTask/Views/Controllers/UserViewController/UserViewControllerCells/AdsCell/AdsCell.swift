@@ -14,8 +14,7 @@ class AdsCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        setupCollectionView() // Added setupCollectionView call
-        setupCompositionalLayout()
+        setupCollectionView()
     }
     
     func configure(with ads: [Advertisement]) {
@@ -34,43 +33,6 @@ class AdsCell: UITableViewCell {
         layout.minimumLineSpacing = 8
         layout.minimumInteritemSpacing = 8
         collectionView.collectionViewLayout = layout
-    }
-    
-    private func setupCompositionalLayout() {
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.register(UINib(nibName: "AdsItemCell", bundle: nil), forCellWithReuseIdentifier: "AdsItemCell")
-        
-        // Create a compositional layout
-        let layout = createStaggeredLayout()
-        collectionView.collectionViewLayout = layout
-    }
-    
-    private func createStaggeredLayout() -> UICollectionViewLayout {
-        // Define the item size (dynamic based on product height)
-        let itemProvider: NSCollectionLayoutItem = {
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(180))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            return item
-        }()
-
-        // Define the group to hold 3 items in a row
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(200))
-        
-        // Define a horizontal group with 3 items
-        let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize: groupSize,
-            subitems: [itemProvider, itemProvider, itemProvider] // 3 items in a row
-        )
-
-        // Create a section using the group
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 8
-        section.contentInsets = .init(top: 8, leading: 8, bottom: 8, trailing: 8)
-
-        // Create the compositional layout with the section
-        let layout = UICollectionViewCompositionalLayout(section: section)
-        return layout
     }
 }
 
