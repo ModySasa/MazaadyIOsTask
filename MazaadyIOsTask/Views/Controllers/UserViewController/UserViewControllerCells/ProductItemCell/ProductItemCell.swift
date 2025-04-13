@@ -20,6 +20,13 @@ class ProductItemCell: UICollectionViewCell {
     @IBOutlet weak var offerPrice: UILabel!
     
     @IBOutlet weak var lotLabel: UILabel!
+    @IBOutlet weak var days: UILabel!
+    @IBOutlet weak var mins: UILabel!
+    @IBOutlet weak var hours: UILabel!
+    
+    @IBOutlet weak var dLabel: UILabel!
+    @IBOutlet weak var mLabel: UILabel!
+    @IBOutlet weak var hLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -47,7 +54,25 @@ class ProductItemCell: UICollectionViewCell {
             offerPrice.isHidden = true
         }
         
-        if let endDate = product.endDate {
+        if product.endDate != nil {
+            lotLabel.text = strings(key: .lotStartsIn)
+            lotLabel.font = UIFont(name: "Nunito-Regular", size: 10)
+            lotLabel.textColor = UIColor(named: "gray3")
+            
+            dLabel.text = strings(key: .d_)
+            dLabel.font = UIFont(name: "Nunito-Bold", size: 8)
+            dLabel.textColor = UIColor(named: "orange1")
+            
+            mLabel.text = strings(key: .m_)
+            mLabel.font = UIFont(name: "Nunito-Bold", size: 8)
+            mLabel.textColor = UIColor(named: "orange1")
+            
+            
+            hLabel.text = strings(key: .h_)
+            hLabel.font = UIFont(name: "Nunito-Bold", size: 8)
+            hLabel.textColor = UIColor(named: "orange1")
+
+
             setProductCountDown(product , product.countdownComponents)
         } else {
             lotLabel.isHidden = true
@@ -70,7 +95,7 @@ class ProductItemCell: UICollectionViewCell {
     }
     
     func setProductPrice(_ product:Product) {
-        itemPrice.text = "\(product.price ?? 0)"
+        itemPrice.text = "\(Int(product.price ?? 0))"
         itemPrice.font = UIFont(name: "Nunito-Bold", size: 12)
         itemPrice.textColor = UIColor(named: "gray1")
         
@@ -80,9 +105,9 @@ class ProductItemCell: UICollectionViewCell {
     }
     
     func setProductOffer(_ product:Product , offer:Double) {
-        let currentPrice = "\(offer)" + " " + (product.currency ?? "")
+        let currentPrice = "\(Int(offer))" + " " + (product.currency ?? "")
         
-        let oldPrice = "\(product.price ?? 0)" + " " + (product.currency ?? "")
+        let oldPrice = "\(Int(product.price ?? 0))" + " " + (product.currency ?? "")
         
         let attributedString = NSMutableAttributedString(string: currentPrice + " " + oldPrice)
         
@@ -100,6 +125,18 @@ class ProductItemCell: UICollectionViewCell {
     }
     
     func setProductCountDown(_ product : Product , _ countDownComponents : (days: Int, hours: Int, minutes: Int)?) {
+        
+        days.text = "\(countDownComponents?.days ?? 0)"
+        days.font = UIFont(name: "Nunito-Bold", size: 12)
+        days.textColor = UIColor(named: "orange1")
+        
+        mins.text = "\(countDownComponents?.minutes ?? 0)"
+        mins.font = UIFont(name: "Nunito-Bold", size: 12)
+        mins.textColor = UIColor(named: "orange1")
+        
+        hours.text = "\(countDownComponents?.hours ?? 0)"
+        hours.font = UIFont(name: "Nunito-Bold", size: 12)
+        hours.textColor = UIColor(named: "orange1")
         
     }
 }

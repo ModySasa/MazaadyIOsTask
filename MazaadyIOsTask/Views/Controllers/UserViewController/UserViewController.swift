@@ -183,14 +183,13 @@ extension UserViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 2 {
-            return calculateProductsHeight() * 2
+            return calculateProductsHeight() * 1.79
         } else if indexPath.section == 0 {
             return 250
         } else if indexPath.section == 1 {
             return 60
         } else if indexPath.section == 3 {
-//            print(ads.count , "ads count in user" )
-            return CGFloat(ads.count) * (150.0 + 16.0) //* 2
+            return CGFloat(ads.count) * (150.0 + 16.0)
         } else {
             return UITableView.automaticDimension
         }

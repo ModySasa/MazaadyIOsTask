@@ -30,6 +30,10 @@ enum ProjectStrings: String {
     case priceOffer = "priceOffer"
     case lotStartsIn = "lotStartIn"
     
+    case d_ = "d"
+    case h_ = "h"
+    case m_ = "m"
+    
     
     case home = "home"
     case search = "search"

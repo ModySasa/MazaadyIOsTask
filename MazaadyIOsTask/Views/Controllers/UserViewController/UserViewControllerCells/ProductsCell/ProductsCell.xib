@@ -16,29 +16,56 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="166"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="hUf-E6-hAI">
-                        <rect key="frame" x="12" y="0.0" width="296" height="166"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Rqc-cH-BRO">
-                            <size key="itemSize" width="128" height="128"/>
-                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        </collectionViewFlowLayout>
-                    </collectionView>
+                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="gZK-ox-ply">
+                        <rect key="frame" x="16" y="0.0" width="288" height="166"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="hUf-E6-hAI">
+                                <rect key="frame" x="0.0" y="0.0" width="90.666666666666671" height="166"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Rqc-cH-BRO">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                            </collectionView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="Dda-g6-swX">
+                                <rect key="frame" x="98.666666666666657" y="0.0" width="90.666666666666657" height="166"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="qhP-8U-GAH">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                            </collectionView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="XZu-K5-iwy">
+                                <rect key="frame" x="197.33333333333334" y="0.0" width="90.666666666666657" height="166"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="CqV-56-xeW">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                            </collectionView>
+                        </subviews>
+                    </stackView>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
-                    <constraint firstAttribute="centerX" secondItem="hUf-E6-hAI" secondAttribute="centerX" id="4an-AY-u8s"/>
-                    <constraint firstItem="hUf-E6-hAI" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="12" id="D0w-UA-fly"/>
-                    <constraint firstItem="hUf-E6-hAI" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="Y1r-Ue-ZqQ"/>
-                    <constraint firstItem="hUf-E6-hAI" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="zFk-D1-fdE"/>
+                    <constraint firstItem="gZK-ox-ply" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="0RB-YU-Rsf"/>
+                    <constraint firstItem="gZK-ox-ply" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="cnz-ph-hsq"/>
+                    <constraint firstItem="gZK-ox-ply" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="eCs-oE-ldT"/>
+                    <constraint firstItem="gZK-ox-ply" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="pvL-5n-ag2"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
                 <outlet property="collectionView" destination="hUf-E6-hAI" id="tNQ-R7-xGO"/>
+                <outlet property="middleCollection" destination="Dda-g6-swX" id="eTZ-ti-F30"/>
+                <outlet property="trailingCollection" destination="XZu-K5-iwy" id="zAI-Fk-8Hp"/>
             </connections>
             <point key="canvasLocation" x="27.480916030534349" y="9.8591549295774659"/>
         </tableViewCell>

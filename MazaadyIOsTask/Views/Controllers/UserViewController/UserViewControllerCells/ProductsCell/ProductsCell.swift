@@ -10,22 +10,46 @@ import UIKit
 class ProductsCell: UITableViewCell {
     var products: [Product] = []
     
+    var leadingProducts: [Product] = []
+    var middleProducts: [Product] = []
+    var trailingProducts: [Product] = []
+    
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var middleCollection: UICollectionView!
+    @IBOutlet weak var trailingCollection: UICollectionView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        setupCollectionView() // Added setupCollectionView call
-//        setupStaggeredCollectionView()
-//        setupCompositionalLayout()
+        setupCollectionView(collectionView)
+        setupCollectionView(middleCollection)
+        setupCollectionView(trailingCollection)
     }
     
     func configure(with products: [Product]) {
         self.products = products
+        for (index, product) in products.enumerated() {
+            if index % 3 == 0 {
+                leadingProducts.append(product)
+            } else if index % 3 == 1 {
+                middleProducts.append(product)
+            } else {
+                trailingProducts.append(product)
+            }
+        }
+        print("LEADING COUNTTTTT , \(leadingProducts.count)")
+        print("TRAILING COUNTTTTT , \(trailingProducts.count)")
+        print("MIDDLE COUNTTTTT , \(middleProducts.count)")
+        loadCollection(collectionView)
+        loadCollection(middleCollection)
+        loadCollection(trailingCollection)
+    }
+    
+    func loadCollection(_ collectionView : UICollectionView) {
         collectionView.reloadData()
         collectionView.layoutIfNeeded()
     }
     
-    private func setupCollectionView() {
+    private func setupCollectionView(_ collectionView : UICollectionView) {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(UINib(nibName: "ProductItemCell", bundle: nil), forCellWithReuseIdentifier: "ProductItemCell")
@@ -37,78 +61,68 @@ class ProductsCell: UITableViewCell {
         collectionView.collectionViewLayout = layout
     }
     
-    private func setupStaggeredCollectionView() {
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.register(UINib(nibName: "ProductItemCell", bundle: nil), forCellWithReuseIdentifier: "ProductItemCell")
-        
-        let staggeredLayout = StaggeredFlowLayout()
-        staggeredLayout.products = products
-        staggeredLayout.scrollDirection = .vertical
-        staggeredLayout.minimumLineSpacing = 8
-        staggeredLayout.minimumInteritemSpacing = 8
-        collectionView.collectionViewLayout = staggeredLayout
-    }
-    
-    private func setupCompositionalLayout() {
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.register(UINib(nibName: "ProductItemCell", bundle: nil), forCellWithReuseIdentifier: "ProductItemCell")
-        
-        // Create a compositional layout
-        let layout = createStaggeredLayout()
-        collectionView.collectionViewLayout = layout
-    }
-    
-    private func createStaggeredLayout() -> UICollectionViewLayout {
-        // Define the item size (dynamic based on product height)
-        let itemProvider: NSCollectionLayoutItem = {
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(180))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            return item
-        }()
-
-        // Define the group to hold 3 items in a row
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(200))
-        
-        // Define a horizontal group with 3 items
-        let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize: groupSize,
-            subitems: [itemProvider, itemProvider, itemProvider] // 3 items in a row
-        )
-
-        // Create a section using the group
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 8
-        section.contentInsets = .init(top: 8, leading: 8, bottom: 8, trailing: 8)
-
-        // Create the compositional layout with the section
-        let layout = UICollectionViewCompositionalLayout(section: section)
-        return layout
-    }
 }
 
 extension ProductsCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return products.count
+        if collectionView == self.middleCollection {
+            return middleProducts.count
+        } else if collectionView == self.trailingCollection {
+            return trailingProducts.count
+        } else {
+            return leadingProducts.count
+        }
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProductItemCell", for: indexPath) as! ProductItemCell
-        cell.configure(with: products[indexPath.item])
-        return cell
+        if collectionView == self.middleCollection  , middleProducts.count > indexPath.item  {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProductItemCell", for: indexPath) as! ProductItemCell
+            cell.configure(with: middleProducts[indexPath.item])
+            return cell
+        } else if collectionView == self.trailingCollection , trailingProducts.count > indexPath.item {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProductItemCell", for: indexPath) as! ProductItemCell
+            cell.configure(with: trailingProducts[indexPath.item])
+            return cell
+        } else {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ProductItemCell", for: indexPath) as! ProductItemCell
+            cell.configure(with: leadingProducts[indexPath.item])
+            return cell
+        }
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let screenWidth = UIScreen.main.bounds.width
-        let product = products[indexPath.item]
         let itemWidth: CGFloat = (screenWidth - 32 - 16) / 3
         var itemHeight: CGFloat = 180
-        if(product.offer != nil) {
-            itemHeight += (209 - 160)
-        }
-        if(product.endDate != nil) {
-            itemHeight += (265 - 209)
+        
+        if (collectionView == self.middleCollection) {
+            if(middleProducts.count > indexPath.item) {
+                let product = middleProducts[indexPath.item]
+                if(product.offer != nil) {
+                    itemHeight += (209 - 160)
+                }
+                if(product.endDate != nil) {
+                    itemHeight += (265 - 209)
+                }
+            }
+        } else if (collectionView == self.trailingCollection) {
+            if(trailingProducts.count > indexPath.item) {
+                let product = trailingProducts[indexPath.item]
+                if(product.offer != nil) {
+                    itemHeight += (209 - 160)
+                }
+                if(product.endDate != nil) {
+                    itemHeight += (265 - 209)
+                }
+            }
+        } else {
+            let product = leadingProducts[indexPath.item]
+            if(product.offer != nil) {
+                itemHeight += (209 - 160)
+            }
+            if(product.endDate != nil) {
+                itemHeight += (265 - 209)
+            }
         }
         return CGSize(width: itemWidth, height: itemHeight)
     }

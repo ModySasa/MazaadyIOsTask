@@ -6,6 +6,9 @@
     "price":"Price",
     "priceOffer":"Offer Price",
     "lotStartsIn":"Lot starts in",
+    "d":"D",
+    "h":"H",
+    "m":"M",
     
     "pageTitle" : {
         "":"",
