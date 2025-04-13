@@ -119,36 +119,20 @@ class UserViewController: MainController, UserViewProtocol , UISearchBarDelegate
     
     @objc
     func showLangSheet() {
-        let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let bottomSheetVC = LangChangeBottomSheet()
         
-        let arabicAction = UIAlertAction(title: "العربية", style: .default) { _ in
-            self.changeLang(.ar)
-        }
-        
-        let englishAction = UIAlertAction(title: "English", style: .default) { _ in
-            self.changeLang(.en)
-        }
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-
-        alertController.addAction(arabicAction)
-        alertController.addAction(englishAction)
-        alertController.addAction(cancelAction)
-
-        if let popoverController = alertController.popoverPresentationController {
-            popoverController.sourceView = self.view
-            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-            popoverController.permittedArrowDirections = []
+        // Handle language selection
+        bottomSheetVC.didSelectLanguage = { lang in
+            self.changeLang(lang)
         }
 
-        present(alertController, animated: true)
+        // Start with a transparent background to animate later
+        bottomSheetVC.modalPresentationStyle = .overFullScreen
+        bottomSheetVC.modalTransitionStyle = .crossDissolve
+        
+        present(bottomSheetVC, animated: false)
     }
     
-}
-
-enum Lang : String {
-    case ar = "ar"
-    case en = "en"
 }
 
 // MARK: - UITableViewDataSource, UITableViewDelegate
