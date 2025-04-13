@@ -86,13 +86,4 @@ class MainController: UIViewController {
     func changeStatusToBlack() {
         UIApplication.shared.statusBarStyle = .darkContent
     }
-    
-    func setViewsWithSelectors(_ views:[ViewsWithSelectors]) {
-        for v in views {
-            let singleTap = UITapGestureRecognizer(target: self, action: v.action)
-            
-            v.view.isUserInteractionEnabled = true
-            v.view.addGestureRecognizer(singleTap)
-        }
-    }
 }

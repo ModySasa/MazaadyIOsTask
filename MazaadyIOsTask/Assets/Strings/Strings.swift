@@ -34,6 +34,9 @@ enum ProjectStrings: String {
     case h_ = "h"
     case m_ = "m"
     
+    case products = "products"
+    case reviews = "reviews"
+    
     case topTags = "topTags"
     
     case home = "home"

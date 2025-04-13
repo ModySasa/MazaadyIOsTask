@@ -17,3 +17,26 @@ public class ViewsWithSelectors{
     }
     
 }
+
+extension UIView {
+    func setViewsWithSelectors(_ views:[ViewsWithSelectors]) {
+        for v in views {
+            let singleTap = UITapGestureRecognizer(target: self, action: v.action)
+            
+            v.view.isUserInteractionEnabled = true
+            v.view.addGestureRecognizer(singleTap)
+        }
+    }
+}
+
+extension UIViewController {
+    func setViewsWithSelectors(_ views:[ViewsWithSelectors]) {
+        for v in views {
+            let singleTap = UITapGestureRecognizer(target: self, action: v.action)
+            
+            v.view.isUserInteractionEnabled = true
+            v.view.addGestureRecognizer(singleTap)
+        }
+    }
+}
+

@@ -11,6 +11,10 @@
     "m":"M",
     "topTags":"Top Tags",
     
+    "products":"Products",
+    "reviews":"Reviews",
+    "search" : "Search",
+    
     "pageTitle" : {
         "":"",
         "non":"",

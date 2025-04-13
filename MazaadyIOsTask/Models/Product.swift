@@ -33,3 +33,7 @@ extension Product {
         return (days, hours, minutes)
     }
 }
+
+struct ProductSearchRequest : Codable {
+    let name : String?
+}

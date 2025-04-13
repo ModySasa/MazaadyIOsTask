@@ -8,7 +8,7 @@
 import MSConnectionLib
 
 protocol ProductsInteractorMethod {
-    func getProducts() async -> Result<[Product], MultipleDecodingErrors>
+    func getProducts(_ body : ProductSearchRequest) async -> Result<[Product], MultipleDecodingErrors>
 }
 
 extension ProductsInteractorMethod {

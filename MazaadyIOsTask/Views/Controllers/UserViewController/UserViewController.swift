@@ -18,7 +18,6 @@ class UserViewController: MainController, UserViewProtocol , UISearchBarDelegate
 
     private var userProfile: UserProfile?
     private var products: [Product] = []
-    private var filteredProducts: [Product] = []
     private var ads: [Advertisement] = []
     private var tags: [Tag] = []
 
@@ -43,6 +42,7 @@ class UserViewController: MainController, UserViewProtocol , UISearchBarDelegate
         tableView.register(UINib(nibName: "ProfileCell", bundle: nil), forCellReuseIdentifier: "ProfileCell")
         tableView.register(UINib(nibName: "AdsCell", bundle: nil), forCellReuseIdentifier: "AdsCell")
         tableView.register(UINib(nibName: "TagsCell", bundle: nil), forCellReuseIdentifier: "TagsCell")
+        tableView.register(UINib(nibName: "TabsCell", bundle: nil), forCellReuseIdentifier: "TabsCell")
         
     }
     
@@ -64,12 +64,12 @@ class UserViewController: MainController, UserViewProtocol , UISearchBarDelegate
     //MARK: - Search Methods
     private var searchText: String = "" {
         didSet {
-            if searchText.count > 2 {
-                filteredProducts = products.filter { ($0.name ?? "").lowercased().contains(searchText.lowercased()) }
-            } else {
-                filteredProducts = products
-            }
-            tableView.reloadSections(IndexSet(integer: 2), with: .automatic)
+            presenter.searchProducts(searchText: searchText)
+            searchText = ""
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+//                self.tableView.reloadData()
+//                self.tableView.layoutIfNeeded()
+//            }
         }
     }
     
@@ -81,8 +81,10 @@ class UserViewController: MainController, UserViewProtocol , UISearchBarDelegate
 
     func showProducts(_ products: [Product]) {
         self.products = products
-        self.filteredProducts = products
-        tableView.reloadSections(IndexSet(integer: 2), with: .automatic)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.tableView.reloadSections(IndexSet(integer: 2), with: .automatic)
+            self.tableView.layoutIfNeeded()
+        }
     }
 
     func showAds(_ ads: [Advertisement]) {
@@ -130,6 +132,7 @@ class UserViewController: MainController, UserViewProtocol , UISearchBarDelegate
         present(bottomSheetVC, animated: false)
     }
     
+    var isNotProductTab = false
 }
 
 // MARK: - UITableViewDataSource, UITableViewDelegate
@@ -143,8 +146,8 @@ extension UserViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0: return userProfile == nil ? 0 : 1
-        case 1: return 1 // Search
-        case 2: return filteredProducts.count > 0 ? 1 : 0
+        case 1: return 1
+        case 2: return 1
         case 3: return ads.count > 0 ? 1 : 0
         case 4: return tags.count > 0 ? 1 : 0
         default: return 0
@@ -181,36 +184,58 @@ extension UserViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func calculateProductsHeight() -> CGFloat {
-        let itemsPerRow = 3
-        let totalItems = filteredProducts.count
-        var totalHeight: CGFloat = 180
-
-        for startIndex in stride(from: 0, to: totalItems, by: itemsPerRow) {
-            let endIndex = min(startIndex + itemsPerRow, totalItems)
-            let rowItems = filteredProducts[startIndex..<endIndex]
-
-            let rowHasEndDate = rowItems.contains { $0.endDate != nil }
-            let rowHasOffer = rowItems.contains { $0.offer != nil }
-            if(rowHasOffer) {
-                totalHeight += (209 - 160)
+        if isNotProductTab {
+            return 0
+        } else {
+            var leadingProducts : [Product] = []
+            var middleProducts : [Product] = []
+            var trailingProducts : [Product] = []
+            
+            var leadingProductsHeight : CGFloat = 0
+            var middleProductsHeight : CGFloat = 0
+            var trailingProductsHeight : CGFloat = 0
+            
+            for (index, product) in products.enumerated() {
+                var itemHeight: CGFloat = 160
+                
+                if product.offer != nil {
+                    itemHeight += (209 - 160)
+                }
+                if product.endDate != nil {
+                    itemHeight += (265 - 209)
+                }
+                
+                if index % 3 == 0 {
+                    leadingProducts.append(product)
+                    leadingProductsHeight += itemHeight
+                } else if index % 3 == 1 {
+                    middleProducts.append(product)
+                    middleProductsHeight += itemHeight
+                } else {
+                    trailingProducts.append(product)
+                    trailingProductsHeight += itemHeight
+                }
             }
-            if(rowHasEndDate) {
-                totalHeight += (265 - 209)
-            }
+            
+            leadingProductsHeight += CGFloat(8 * (leadingProducts.count - 1))
+            middleProductsHeight += CGFloat(8 * (middleProducts.count - 1))
+            trailingProductsHeight += CGFloat(8 * (trailingProducts.count - 1))
+            
+            let totalHeight = 172 + max(leadingProductsHeight , middleProductsHeight, trailingProductsHeight)
+            
+            return totalHeight
         }
-
-        return totalHeight
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 2 {
-            return calculateProductsHeight() * 1.79
+            return calculateProductsHeight()
         } else if indexPath.section == 0 {
             return 250
         } else if indexPath.section == 1 {
-            return 60
+            return 35
         } else if indexPath.section == 3 {
-            return CGFloat(ads.count) * (150.0 + 16.0)
+            return CGFloat(ads.count) * (150.0 + 16.0) + 60
         } else {
             return calculateHeight(for: tags, width: tableView.frame.width) + 50
         }
@@ -224,22 +249,28 @@ extension UserViewController: UITableViewDataSource, UITableViewDelegate {
             }
             return cell
         } else if indexPath.section == 1 {
-            let cell = UITableViewCell()
-            let searchBar = UISearchBar()
-            searchBar.delegate = self
-            searchBar.placeholder = "Search products"
-            cell.contentView.addSubview(searchBar)
-            searchBar.translatesAutoresizingMaskIntoConstraints = false
-            NSLayoutConstraint.activate([
-                searchBar.topAnchor.constraint(equalTo: cell.contentView.topAnchor),
-                searchBar.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor),
-                searchBar.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor),
-                searchBar.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor)
-            ])
+            let cell = tableView.dequeueReusableCell(withIdentifier: "TabsCell", for: indexPath) as! TabsCell
+            cell.configure { tab in
+                self.isNotProductTab = tab != .products
+                if(self.isNotProductTab) {
+                    self.products.removeAll()
+                    self.ads.removeAll()
+                    self.tags.removeAll()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        self.tableView.reloadData()
+                        self.tableView.layoutIfNeeded()
+                    }
+                } else {
+                    self.presenter.loadInitialData()
+                }
+            }
             return cell
+            
         } else if indexPath.section == 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "ProductsCell", for: indexPath) as! ProductsCell
-            cell.configure(with: filteredProducts)
+            cell.configure(with: products) { searchText in
+                self.searchText = searchText
+            }
             return cell
         } else if indexPath.section == 3 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "AdsCell", for: indexPath) as! AdsCell

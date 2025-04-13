@@ -10,11 +10,11 @@ import MSConnectionLib
 actor ProductsInteractorNetworkManager: ProductsInteractorMethod , BaseUrlProviding {
     private let networkManager = NetworkManager()
     
-    func getProducts() async -> Result<[Product], MultipleDecodingErrors> {
+    func getProducts(_ body : ProductSearchRequest) async -> Result<[Product], MultipleDecodingErrors> {
         await networkManager.get(
             from: getUrl(url),
             lang: getLang(),
-            parameters: networkManager.optionalBody,
+            parameters: body,
             responseType: [Product].self,
             token: nil
         )

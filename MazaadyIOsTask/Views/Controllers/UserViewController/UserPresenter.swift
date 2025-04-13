@@ -47,6 +47,11 @@ class UserPresenter {
         }
     }
     
+    func searchProducts(searchText keyword: String) {
+        Task {
+            await fetchProducts(by: keyword)
+        }
+    }
     @MainActor
     private func fetchUserProfile() async {
         let result = await userInteractor.getUser()
@@ -59,8 +64,8 @@ class UserPresenter {
     }
     
     @MainActor
-    private func fetchProducts() async {
-        let result = await productsInteractor.getProducts()
+    private func fetchProducts(by searchText : String? = nil) async {
+        let result = await productsInteractor.getProducts(.init(name: searchText))
         switch result {
         case .success(let response):
             view?.showProducts(response)

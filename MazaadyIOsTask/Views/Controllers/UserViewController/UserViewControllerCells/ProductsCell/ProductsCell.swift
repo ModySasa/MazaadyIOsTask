@@ -8,7 +8,11 @@
 import UIKit
 
 class ProductsCell: UITableViewCell {
-    var products: [Product] = []
+    @IBOutlet weak var searchButton: UIImageView!
+    @IBOutlet weak var searchField: UITextField!
+    
+    @IBOutlet weak var searchTabView: UIView!
+    var didTapSearch: ((String) -> Void)?
     
     var leadingProducts: [Product] = []
     var middleProducts: [Product] = []
@@ -23,10 +27,15 @@ class ProductsCell: UITableViewCell {
         setupCollectionView(collectionView)
         setupCollectionView(middleCollection)
         setupCollectionView(trailingCollection)
+        searchField.placeholder = strings(key: .search)
+        addPaddingToSearchField()
     }
     
-    func configure(with products: [Product]) {
-        self.products = products
+    func configure(with products: [Product] , didTabSearch : @escaping (String) -> Void) {
+        leadingProducts = []
+        middleProducts = []
+        trailingProducts = []
+        self.didTapSearch = didTabSearch
         for (index, product) in products.enumerated() {
             if index % 3 == 0 {
                 leadingProducts.append(product)
@@ -36,12 +45,15 @@ class ProductsCell: UITableViewCell {
                 trailingProducts.append(product)
             }
         }
-        print("LEADING COUNTTTTT , \(leadingProducts.count)")
-        print("TRAILING COUNTTTTT , \(trailingProducts.count)")
-        print("MIDDLE COUNTTTTT , \(middleProducts.count)")
         loadCollection(collectionView)
         loadCollection(middleCollection)
         loadCollection(trailingCollection)
+        
+        setViewsWithSelectors(
+            .init(arrayLiteral:
+                    .init(searchTabView, #selector(searchTapped))
+                 )
+        )
     }
     
     func loadCollection(_ collectionView : UICollectionView) {
@@ -59,6 +71,22 @@ class ProductsCell: UITableViewCell {
         layout.minimumLineSpacing = 8
         layout.minimumInteritemSpacing = 8
         collectionView.collectionViewLayout = layout
+    }
+    
+    //MARK: SEARCH
+    @objc func searchTapped(){
+        if let didTapSearch {
+            didTapSearch(searchField.text ?? "")
+            searchField.text = ""
+        }
+    }
+    
+    private func addPaddingToSearchField() {
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 32, height: searchField.frame.height))
+        searchField.leftView = paddingView
+        searchField.leftViewMode = .always
+        searchField.rightView = paddingView
+        searchField.rightViewMode = .always
     }
     
 }
@@ -125,84 +153,5 @@ extension ProductsCell: UICollectionViewDelegate, UICollectionViewDataSource, UI
             }
         }
         return CGSize(width: itemWidth, height: itemHeight)
-    }
-}
-
-
-//import UIKit
-
-class StaggeredFlowLayout: UICollectionViewFlowLayout {
-    private var cache: [UICollectionViewLayoutAttributes] = []
-    private var rowHeights: [CGFloat] = []  // To track the total height of each row
-    var products: [Product] = []
-
-    // Called when the layout is transitioning
-    override func prepareForTransition(to newLayout: UICollectionViewLayout) {
-        super.prepareForTransition(to: newLayout)
-        cache.removeAll()
-        rowHeights.removeAll()
-    }
-
-    // This method is used to return layout attributes of the items in the given rect
-    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        var attributesInRect: [UICollectionViewLayoutAttributes] = []
-        
-        for attributes in cache {
-            if attributes.frame.intersects(rect) {
-                attributesInRect.append(attributes)
-            }
-        }
-        
-        return attributesInRect
-    }
-
-    // This method is called to invalidate layout attributes for specific items
-    override func shouldInvalidateLayout(forPreferredLayoutAttributes preferredAttributes: UICollectionViewLayoutAttributes, withOriginalAttributes originalAttributes: UICollectionViewLayoutAttributes) -> Bool {
-        return true
-    }
-
-    // This method is where we calculate the layout attributes for each item
-    override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
-        let attributes = super.layoutAttributesForItem(at: indexPath)!
-        
-        let screenWidth = UIScreen.main.bounds.width
-        let itemWidth: CGFloat = (screenWidth - 32 - 16) / 3
-        var itemHeight: CGFloat = 180
-        
-        let product = products[indexPath.item]
-        if product.offer != nil {
-            itemHeight += (209 - 160)
-        }
-        if product.endDate != nil {
-            itemHeight += (265 - 209)
-        }
-        
-        let row = indexPath.item / 3
-        let column = indexPath.item % 3
-        
-        // Calculate dynamic vertical offset
-        var yOffset: CGFloat = 0
-        if row > 0 {
-            let previousRowHeight = rowHeights[row - 1] // Height of the previous row
-            yOffset = previousRowHeight
-        }
-
-        // Update the height for this row
-        if rowHeights.count <= row {
-            rowHeights.append(itemHeight + minimumLineSpacing) // Add height for the first item in the row
-        } else {
-            rowHeights[row] += itemHeight + minimumLineSpacing // Add to the existing row height
-        }
-
-        // Set the new frame for the item, considering the dynamic yOffset
-        attributes.frame = CGRect(x: (itemWidth + minimumInteritemSpacing) * CGFloat(column) + 16,
-                                  y: yOffset,
-                                  width: itemWidth,
-                                  height: itemHeight)
-
-        // Cache the attributes for reuse
-        cache.append(attributes)
-        
-        return attributes
     }
 }
