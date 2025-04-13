@@ -39,7 +39,9 @@ class UserViewController: MainController, UserViewProtocol , UISearchBarDelegate
         tableView.dataSource = self
         tableView.delegate = self
         
+        tableView.register(UINib(nibName: "ProductsCell", bundle: nil), forCellReuseIdentifier: "ProductsCell")
         tableView.register(UINib(nibName: "ProfileCell", bundle: nil), forCellReuseIdentifier: "ProfileCell")
+        tableView.register(UINib(nibName: "AdsCell", bundle: nil), forCellReuseIdentifier: "AdsCell")
         
     }
     
@@ -74,7 +76,8 @@ class UserViewController: MainController, UserViewProtocol , UISearchBarDelegate
     func showUserProfile(_ profile: UserProfile) {
         print("User: \(profile.name ?? "")")
         self.userProfile = profile
-        tableView.reloadData()
+        tableView.reloadSections(IndexSet(integer: 0), with: .automatic)
+//        tableView.reloadData()
     }
 
     func showProducts(_ products: [Product]) {
@@ -82,20 +85,22 @@ class UserViewController: MainController, UserViewProtocol , UISearchBarDelegate
         print("FILTERED \(filteredProducts.count) filteredProducts")
         self.products = products
         self.filteredProducts = products
-        tableView.reloadData()
+//        tableView.reloadData()
+        tableView.reloadSections(IndexSet(integer: 2), with: .automatic)
     }
-
 
     func showAds(_ ads: [Advertisement]) {
         print("Loaded \(ads.count) ads")
         self.ads = ads
-        tableView.reloadData()
+//        tableView.reloadData()
+        tableView.reloadSections(IndexSet(integer: 3), with: .automatic)
     }
 
     func showTags(_ tags: [Tag]) {
         print("Loaded \(tags.count) tags")
         self.tags = tags
-        tableView.reloadData()
+//        tableView.reloadData()
+        tableView.reloadSections(IndexSet(integer: 4), with: .automatic)
     }
 
     func showError(_ error: String) {
@@ -147,17 +152,56 @@ extension UserViewController: UITableViewDataSource, UITableViewDelegate {
         switch section {
         case 0: return userProfile == nil ? 0 : 1
         case 1: return 1 // Search
-        case 2: return filteredProducts.count
-        case 3: return ads.count
+        case 2: return 1 // Products cell
+        case 3: return 1
         case 4: return tags.count
         default: return 0
         }
     }
+    
+    func calculateProductsHeight() -> CGFloat {
+        let itemsPerRow = 3
+        let totalItems = filteredProducts.count
+        var totalHeight: CGFloat = 180
 
+        for startIndex in stride(from: 0, to: totalItems, by: itemsPerRow) {
+            let endIndex = min(startIndex + itemsPerRow, totalItems)
+            let rowItems = filteredProducts[startIndex..<endIndex]
+
+            let rowHasEndDate = rowItems.contains { $0.endDate != nil }
+            let rowHasOffer = rowItems.contains { $0.offer != nil }
+            if(rowHasOffer) {
+                totalHeight += (209 - 160)
+            }
+            if(rowHasEndDate) {
+                totalHeight += (265 - 209)
+            }
+        }
+
+        return totalHeight
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 2 {
+            return calculateProductsHeight() * 2
+        } else if indexPath.section == 0 {
+            return 250
+        } else if indexPath.section == 1 {
+            return 60
+        } else if indexPath.section == 3 {
+//            print(ads.count , "ads count in user" )
+            return CGFloat(ads.count) * (150.0 + 16.0) //* 2
+        } else {
+            return UITableView.automaticDimension
+        }
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.section == 0, let profile = userProfile {
+        if indexPath.section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "ProfileCell", for: indexPath) as! ProfileCell
-            cell.configure(with: profile)
+            if let profile = userProfile {
+                cell.configure(with: profile)
+            }
             return cell
         } else if indexPath.section == 1 {
             let cell = UITableViewCell()
@@ -173,10 +217,18 @@ extension UserViewController: UITableViewDataSource, UITableViewDelegate {
                 searchBar.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor)
             ])
             return cell
+        } else if indexPath.section == 2 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ProductsCell", for: indexPath) as! ProductsCell
+            cell.configure(with: filteredProducts)
+            return cell
+        } else if indexPath.section == 3 {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "AdsCell", for: indexPath) as! AdsCell
+            cell.configure(with: ads)
+            return cell
+        } else {
+            let cell = UITableViewCell()
+            cell.textLabel?.text = "Section \(indexPath.section) Row \(indexPath.row)"
+            return cell
         }
-
-        let cell = UITableViewCell()
-        cell.textLabel?.text = "Section \(indexPath.section) Row \(indexPath.row)"
-        return cell
     }
 }

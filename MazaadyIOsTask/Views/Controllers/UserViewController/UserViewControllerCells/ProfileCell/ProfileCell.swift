@@ -55,34 +55,11 @@ class ProfileCell: UITableViewCell {
         userAddress.textColor = UIColor(named: "gray2")
         
         if let imageUrl = URL(string: profile.image ?? "") {
-            downloadImage(imageUrl)
+            downloadImage(imageUrl) { image in
+                self.userImage.image = image
+            }
         }
     }
     
-    func downloadImage(_ url: URL) {
-        let request = URLRequest(url: url, cachePolicy: .returnCacheDataElseLoad, timeoutInterval: 60)
-        
-        if let cachedResponse = URLCache.shared.cachedResponse(for: request),
-           let image = UIImage(data: cachedResponse.data) {
-            DispatchQueue.main.async {
-                self.userImage.image = image
-            }
-            return
-        }
-        
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            guard
-                let data = data,
-                let response = response,
-                let image = UIImage(data: data)
-            else { return }
-            
-            let cachedData = CachedURLResponse(response: response, data: data)
-            URLCache.shared.storeCachedResponse(cachedData, for: request)
-            
-            DispatchQueue.main.async {
-                self.userImage.image = image
-            }
-        }.resume()
-    }
+    
 }

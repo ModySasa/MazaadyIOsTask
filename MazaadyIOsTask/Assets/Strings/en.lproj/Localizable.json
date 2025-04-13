@@ -3,6 +3,9 @@
     "following":"Following",
     "followers":"Followers",
     "language":"Language",
+    "price":"Price",
+    "priceOffer":"Offer Price",
+    "lotStartsIn":"Lot starts in",
     
     "pageTitle" : {
         "":"",

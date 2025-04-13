@@ -26,6 +26,9 @@ enum ProjectStrings: String {
     case following = "following"
     case followers = "followers"
     case language = "language"
+    case price = "price"
+    case priceOffer = "priceOffer"
+    case lotStartsIn = "lotStartIn"
     
     
     case home = "home"

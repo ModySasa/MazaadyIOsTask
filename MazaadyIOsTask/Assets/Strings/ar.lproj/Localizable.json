@@ -3,6 +3,9 @@
     "following":"متابعة",
     "followers":"متابعون",
     "language":"اللغة",
+    "price":"السعر",
+    "priceOffer":"سعر العرض",
+    "lotStartsIn":"المزاد يبدأ في",
     
     "pageTitle" : {
         "":"",

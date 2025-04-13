@@ -114,6 +114,7 @@
                         </subviews>
                     </stackView>
                 </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstItem="Ml7-YF-biQ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="A9V-PK-h1K"/>
                     <constraint firstItem="Ml7-YF-biQ" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="DTi-Mr-xTk"/>
@@ -129,6 +130,7 @@
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <connections>
                 <outlet property="followersCount" destination="r0Q-gc-I0m" id="eiO-qD-dq2"/>
                 <outlet property="followersLabel" destination="6X9-Hj-JgM" id="1Zk-nU-rnc"/>
